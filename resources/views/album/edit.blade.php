@@ -12,13 +12,11 @@
 </head>
 
 <body>
-
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-header">Edit Album</div>
-
                     <div class="card-body">
                         <form action="{{ route('album.update', $album->id) }}" method="POST" enctype="multipart/form-data">
                             @csrf

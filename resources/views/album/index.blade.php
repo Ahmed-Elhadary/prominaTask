@@ -38,11 +38,17 @@
             width: 120px;
             margin: auto;
         }
+
     </style>
 </head>
 
 <body>
     <div class="card album-veiw">
+        @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+        @endif
         <div class="card-header" style="display: flex; place-content: space-between;">
             <div class="title">
                 ALBUMS
@@ -55,44 +61,41 @@
             <div class="container">
                 <div class="row">
                     @foreach ($albums as $album)
-                        <div class="col-md-3 mt-4">
-                            <div class="item text-center">
-                                <div class="btn-group">
-                                    <a class="dropdown-toggle toggle-menu-list" data-toggle="dropdown"
-                                        aria-haspopup="true" aria-expanded="false">
-                                        <i class="folder-actions fas fa-ellipsis-v"></i>
-                                    </a>
-                                    <div class="dropdown-menu">
-
-                                        <a class="dropdown-item" href="{{ route('album.edit', $album->id) }}">
-                                            Edit </a>
-                                        <hr style="margin: 2px 0 0;">
-                                        <a class="dropdown-item delete-album" href="#" type="button" data-toggle="modal" data-id="{{ $album->id }}"
-                                            data-target="#exampleModal">
-                                            delete </a>
-
-
-
-                                    </div>
-                                </div>
-                                <a href="{{ route('album.show', $album->id) }}">
-                                    <img src="{{ asset('asset/images/3460517.png') }}" alt="SEO Keywords">
-                                    <p>
-                                        {{ $album->name }}
-                                    </p>
+                    <div class="col-md-3 mt-4">
+                        <div class="item text-center">
+                            <div class="btn-group">
+                                <a class="dropdown-toggle toggle-menu-list" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="folder-actions fas fa-ellipsis-v"></i>
                                 </a>
+                                <div class="dropdown-menu">
 
+                                    <a class="dropdown-item" href="{{ route('album.edit', $album->id) }}">
+                                        Edit </a>
+                                    <hr style="margin: 2px 0 0;">
+                                    <a class="dropdown-item delete-album" href="#" type="button" data-toggle="modal" data-id="{{ $album->id }}" data-target="#exampleModal">
+                                        delete </a>
+
+
+
+                                </div>
                             </div>
+                            <a href="{{ route('album.show', $album->id) }}">
+                                <img src="{{ asset('asset/images/3460517.png') }}" alt="SEO Keywords">
+                                <p>
+                                    {{ $album->name }}
+                                </p>
+                            </a>
 
                         </div>
+
+                    </div>
                     @endforeach
                 </div>
             </div>
         </div>
 
 
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -112,7 +115,7 @@
 
                         <select class="form-control d-none another-album" name="album" id="">
                             @foreach ($albums as $item)
-                                <option value="{{ $item->id }}">{{ $item->name }}</option>
+                            <option value="{{ $item->id }}">{{ $item->name }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -135,23 +138,23 @@
 
 
     <script>
-        $(document).ready(function(){
+        $(document).ready(function() {
 
-            $('input[type="radio"]').change(function(){
-                if($(this).val() == "move"){
+            $('input[type="radio"]').change(function() {
+                if ($(this).val() == "move") {
                     $('.another-album').removeClass('d-none');
                 } else {
                     $('.another-album').addClass('d-none');
                 }
             });
 
-            $(document).on('click','.delete-album', function(){
+            $(document).on('click', '.delete-album', function() {
                 var album_id = $(this).data('id');
                 $('.album_id').val(album_id);
             });
 
 
-            $('.delete-album-submit').on('click',function(e){
+            $('.delete-album-submit').on('click', function(e) {
                 e.preventDefault();
                 var albumId = $(this).data('id');
                 var deleteOption = $('input[name="check_delete"]:checked').val();
@@ -159,25 +162,26 @@
                 var albumToDelete = $('.album_id').val();
 
                 $.ajax({
-                    url: '/album/' + albumId,
-                    type: 'DELETE',
-                    data: {
-                        "_token": "{{ csrf_token() }}",
-                        "delete_option": deleteOption,
-                        "move_album_id": moveAlbumId,
-                        "album_to_delete": albumToDelete
-                    },
-                    success: function(response) {
+                    url: '/album/' + albumId
+                    , type: 'DELETE'
+                    , data: {
+                        "_token": "{{ csrf_token() }}"
+                        , "delete_option": deleteOption
+                        , "move_album_id": moveAlbumId
+                        , "album_to_delete": albumToDelete
+                    }
+                    , success: function(response) {
                         window.location.reload();
-                    },
-                    error: function(xhr) {
+                    }
+                    , error: function(xhr) {
                         alert('Error deleting album');
-                     
+
                     }
                 });
 
             });
         });
+
     </script>
 </body>
 
